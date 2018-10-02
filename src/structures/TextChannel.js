@@ -37,11 +37,31 @@ class TextChannel extends GuildChannel {
      */
     this.nsfw = Boolean(data.nsfw);
 
+    /**
+     * The ID of the last message sent in this channel, if one was sent
+     * @type {?Snowflake}
+     */
     this.lastMessageID = data.last_message_id;
+    
+    /**
+     * The ratelimit per user for this channel
+     * @type {number}
+     */
+    this.rateLimitPerUser = data.rate_limit_per_user || 0;
 
     if (data.messages) for (const message of data.messages) this.messages.add(message);
   }
 
+  /**
+   * Sets the rate limit per user for this channel.
+   * @param {number} rateLimitPerUser The new ratelimit
+   * @param {string} [reason] Reason for changing the channel's ratelimits
+   * @returns {Promise<TextChannel>}
+   */
+  setRateLimitPerUser(rateLimitPerUser, reason) {
+    return this.edit({ rateLimitPerUser }, reason);
+  }
+  
   /**
    * Sets whether this channel is flagged as NSFW.
    * @param {boolean} nsfw Whether the channel should be considered NSFW
